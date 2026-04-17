@@ -4,8 +4,9 @@ from abc import ABC, abstractmethod
 from typing import Any
 from requests.exceptions import HTTPError, RequestException
 
+
 class BaseAPIClient(ABC):
-    """ Базовый класс для работы с сервисами API. """
+    """Базовый класс для работы с API сервисами"""
 
     @staticmethod
     def _make_request(url: str, params: Any, headers: dict[str, str] | None = None) -> dict | list:
