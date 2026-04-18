@@ -19,6 +19,7 @@ def create_database(db_name: str, params: dict):
 
 
 def drop_database(db_name: str, params: dict):
+    pass
 
 if __name__ == '__main__':
     create_database('airplane', config())
