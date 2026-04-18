@@ -1,27 +1,43 @@
 import psycopg2
 
 from src.config import config
+from src.base_db_manager import BaseDBManager
 
-def create_database(db_name: str, params: dict):
-    """ Вспомогательная функция для создания базы данных. """
-    conn = psycopg2.connect(dbname="postgres", **params)
-    conn.autocommit = True
-    cur = conn.cursor()
+class CreateDB(BaseDBManager):
+    """ Дочерний класс BaseDBManager.
+     Для создания и удаления БД."""
 
-    cur.execute(f"SELECT 1 FROM pg_database WHERE datname = '{db_name}'")
-    exists = cur.fetchone()
+    def connect(self, db_name="postgres"):
+        """ Метод для подключения к БД. """
+        return psycopg2.connect(dbname=db_name, **self.params)
 
-    if not exists:
-        cur.execute(f"CREATE DATABASE {db_name}")
+    def create_db(self):
+        """ Метод для создания БД. """
+        conn = self.connect()
+        conn.autocommit = True
 
-    cur.close()
-    conn.close()
+        with conn.cursor() as cur:
+            cur.execute("SELECT 1 FROM pg_database WHERE datname = %s", (self.db_name,))
+            exists = cur.fetchone()
 
+            if not exists:
+                cur.execute(f"CREATE DATABASE {self.db_name}")
 
-def drop_database(db_name: str, params: dict):
-    pass
+        conn.close()
+
+    def drop_db(self):
+        """ Метод для удаления БД. """
+        conn = self.connect()
+        conn.autocommit = True
+
+        with conn.cursor() as cur:
+            cur.execute(f"DROP DATABASE IF EXISTS {self.db_name}")
+
+        conn.close()
+
 
 if __name__ == '__main__':
-    create_database('airplane', config())
+    db = CreateDB('airplane', config())
+    db.create_db()
 
 
