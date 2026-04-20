@@ -3,9 +3,9 @@ from typing import Any
 
 class BaseFlightRepository(ABC):
     """ Базовый класс для работы с таблицами. """
-    def __init__(self, db_name: str, params: dict[str, str]):
+    def __init__(self, table_name: str, params: dict[str, str]):
         """Метод - конструктор, для инициализации объектов класса."""
-        self.db_name = db_name
+        self.table_name = table_name
         self.params = params
 
     @abstractmethod
