@@ -3,19 +3,19 @@ from typing import Any
 
 class BaseFlightRepository(ABC):
     """ Базовый класс для работы с таблицами. """
-    def __init__(self, table_name: str, params: dict[str, str]):
+    def __init__(
+            self,
+            connection,
+            data_airplane: dict[str, Any]
+    ) -> None:
         """Метод - конструктор, для инициализации объектов класса."""
-        self.table_name = table_name
-        self.params = params
+        self.conn = connection
+        self.data_airplane = data_airplane
 
     @abstractmethod
-    def connet(self):
-        """ Метод для подключения к БД. """
-
-    @abstractmethod
-    def create_table(self):
+    def create_table(self) -> None:
         """ Метод для создания таблиц. """
 
     @abstractmethod
-    def insert_flight(self, data: list[Any]):
-        """ Метод добавления информации о самолетах. """
+    def insert_info(self, data: list[Any]) -> None:
+        """ Метод добавления информации. """

@@ -4,6 +4,6 @@ from src.base_db_manager import BaseDBManager
 
 class PostgresManager(BaseDBManager):
     """ Класс для подключения к БД """
-    def connect(self, db_name="postgres"):
+    def connect(self):
         """ Метод для подключения к БД. """
-        return psycopg2.connect(dbname=db_name, **self.params)
+        return psycopg2.connect(dbname=self.db_name, **self.params)
