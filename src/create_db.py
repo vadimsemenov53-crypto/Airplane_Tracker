@@ -1,6 +1,3 @@
-from src.config import config
-from src.postgres_manager import PostgresManager
-
 class CreateDB:
     """ Класс для создания и удаления БД."""
 
@@ -25,12 +22,3 @@ class CreateDB:
 
         with self.conn.cursor() as cur:
             cur.execute(f"DROP DATABASE IF EXISTS {db_name}")
-
-
-if __name__ == '__main__':
-    params = config()
-    ex_1 = PostgresManager('postgres', params)
-    db = CreateDB(ex_1.connect())
-    db.drop_db('airplane')
-
-
