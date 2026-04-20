@@ -5,17 +5,15 @@ class BaseFlightRepository(ABC):
     """ Базовый класс для работы с таблицами. """
     def __init__(
             self,
-            connection,
-            data_airplane: dict[str, Any]
+            connection
     ) -> None:
         """Метод - конструктор, для инициализации объектов класса."""
         self.conn = connection
-        self.data_airplane = data_airplane
 
     @abstractmethod
     def create_table(self) -> None:
         """ Метод для создания таблиц. """
 
     @abstractmethod
-    def insert_info(self, data: list[Any]) -> None:
-        """ Метод добавления информации. """
+    def insert_info(self, data: dict[str, Any]) -> None:
+        """ Метод добавления информации в таблицу. """
