@@ -14,5 +14,3 @@ def config() -> dict[str, str]:
         'port': os.getenv('POSTGRES_PORT')
     }
     return db_config
-
-print(config())
