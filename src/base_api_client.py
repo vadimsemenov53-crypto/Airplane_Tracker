@@ -1,7 +1,7 @@
-import requests
-
 from abc import ABC, abstractmethod
 from typing import Any
+
+import requests
 from requests.exceptions import HTTPError, RequestException
 
 

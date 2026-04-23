@@ -1,12 +1,15 @@
-class CreateDB:
-    """ Класс для создания и удаления БД."""
+import psycopg2.extensions
 
-    def __init__(self, connection):
+
+class CreateDB:
+    """Класс для создания и удаления БД."""
+
+    def __init__(self, connection: psycopg2.extensions.connection) -> None:
         """Метод - конструктор, для инициализации объектов класса."""
         self.conn = connection
 
-    def create_db(self, db_name: str):
-        """ Метод для создания БД. """
+    def create_db(self, db_name: str) -> None:
+        """Метод для создания БД."""
         self.conn.autocommit = True
 
         with self.conn.cursor() as cur:
@@ -16,8 +19,8 @@ class CreateDB:
             if not exists:
                 cur.execute(f"CREATE DATABASE {db_name}")
 
-    def drop_db(self, db_name: str):
-        """ Метод для удаления БД. """
+    def drop_db(self, db_name: str) -> None:
+        """Метод для удаления БД."""
         self.conn.autocommit = True
 
         with self.conn.cursor() as cur:

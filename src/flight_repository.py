@@ -1,17 +1,18 @@
-from src.base_flight_repository import BaseFlightRepository
 from typing import Any
 
+from src.api_client import APIAircraft, APICoordinates
+from src.base_flight_repository import BaseFlightRepository
 from src.config import config
-from src.postgres_manager import PostgresManager
 from src.create_db import CreateDB
-from src.api_client import APICoordinates, APIAircraft
+from src.postgres_manager import PostgresManager
+
 
 class FlightRepository(BaseFlightRepository):
-    """ Дочерний класс FlightRepository.
-     Для создания таблиц о самолетах и странах, и добавление информации о самолетах."""
+    """Дочерний класс FlightRepository.
+    Для создания таблиц о самолетах и странах, и добавление информации о самолетах."""
 
     def create_table(self) -> None:
-        """ Метод для создания таблиц с данными о самолетах. """
+        """Метод для создания таблиц с данными о самолетах."""
         self.conn.autocommit = True
 
         with self.conn.cursor() as cur:
@@ -36,15 +37,15 @@ class FlightRepository(BaseFlightRepository):
             );""")
 
     def insert_info(self, data: dict[str, Any]) -> None:
-        """ Метод добавления информации. """
-        query =("""
+        """Метод добавления информации."""
+        query = """
         INSERT INTO airplanes (
         icao24, callsign, origin_country, time_position, last_contact,
         longitude, latitude, baro_altitude, on_ground, velocity,
         true_track, vertical_rate, geo_altitude, squawk, spi, position_source
         )
         VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-        ON CONFLICT (icao24) DO NOTHING;""")
+        ON CONFLICT (icao24) DO NOTHING;"""
 
         values = []
 
@@ -52,54 +53,56 @@ class FlightRepository(BaseFlightRepository):
             if air is None:
                 continue
 
-            values.append((
-                air[0],
-                air[1].strip() if air[1] else None,
-                air[2],
-                air[3],
-                air[4],
-                air[5],
-                air[6],
-                air[7],
-                air[8],
-                air[9],
-                air[10],
-                air[11],
-                air[13],
-                air[14],
-                air[15],
-                air[16]
-            ))
+            values.append(
+                (
+                    air[0],
+                    air[1].strip() if air[1] else None,
+                    air[2],
+                    air[3],
+                    air[4],
+                    air[5],
+                    air[6],
+                    air[7],
+                    air[8],
+                    air[9],
+                    air[10],
+                    air[11],
+                    air[13],
+                    air[14],
+                    air[15],
+                    air[16],
+                )
+            )
 
         with self.conn.cursor() as cur:
             cur.executemany(query, values)
 
         self.conn.commit()
 
-if __name__ == '__main__':
-    api_1 = APICoordinates()
-    api_1.get_response_api('Germany')
-    api_1.get_coordinates()
 
-    api_2 = APIAircraft()
-    api_2.get_response_api(api_1.coordinates)
-    data_air = api_2.aeroplanes
-
-
-    params = config()
-
-    manager = PostgresManager('postgres', params)
-    conn = manager.connect()
-
-    db = CreateDB(conn)
-    db.create_db('airplane')
-    conn.close()
-
-    manager2 = PostgresManager('airplane', params)
-    conn2 = manager2.connect()
-
-    table = FlightRepository(conn2)
-    table.create_table()
-    table.insert_info(data_air)
-
-    conn2.close()
+# if __name__ == "__main__":
+#     api_1 = APICoordinates()
+#     api_1.get_response_api("Germany")
+#     api_1.get_coordinates()
+#
+#     api_2 = APIAircraft()
+#     api_2.get_response_api(api_1.coordinates)
+#     data_air = api_2.aeroplanes
+#
+#     params = config()
+#
+#     manager = PostgresManager("postgres", params)
+#     conn = manager.connect()
+#
+#     db = CreateDB(conn)
+#     db.create_db("airplane")
+#     conn.close()
+#
+#     manager2 = PostgresManager("airplane", params)
+#     conn2 = manager2.connect()
+#
+#     table = FlightRepository(conn2)
+#     table.create_table()
+#     table.insert_info(data_air)
+#
+#     conn2.close()
