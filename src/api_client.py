@@ -10,7 +10,7 @@ class APICoordinates(BaseAPIClient):
         """Метод - конструктор, для инициализации объектов класса."""
         self.__url = "https://nominatim.openstreetmap.org/search"
         self.coordinates: dict[str, str] | None = None
-        self._data_response: dict | list | None = None
+        self.data_response: dict | list | None = None
 
     @property
     def url(self) -> str:
@@ -33,15 +33,15 @@ class APICoordinates(BaseAPIClient):
             "limit": 1,
         }
 
-        self._data_response = self._make_request(self.__url, params_nominatim, headers_nominatim)
+        self.data_response = self._make_request(self.__url, params_nominatim, headers_nominatim)
 
     def get_coordinates(self) -> None:
         """Метод, для получения координат из JSON-ответа от API сервиса"""
         # Пример ответа от nominatim.openstreetmap можно посмотреть в задании курсовой.
-        if not self._data_response:
+        if not self.data_response:
             raise ValueError("Полученные данные пустые.")
 
-        geo_coordinates = self._data_response[0].get("boundingbox")
+        geo_coordinates = self.data_response[0].get("boundingbox")
 
         # Параметры для фильтрации самолетов по их географическим координатам.
         self.coordinates = {

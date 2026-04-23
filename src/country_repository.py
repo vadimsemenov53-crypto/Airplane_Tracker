@@ -69,7 +69,7 @@ if __name__ == "__main__":
 
     api_1 = APICoordinates()
     api_1.get_response_api("Germany")
-    data_country = api_1._data_response
+    data_country = api_1.data_response
 
     params = config()
 
