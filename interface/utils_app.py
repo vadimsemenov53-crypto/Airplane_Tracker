@@ -1,6 +1,10 @@
 import time
 
 from src.api_client import APIAircraft, APICoordinates
+from src.country_repository import CountryRepository
+from src.flight_repository import FlightRepository
+from typing import Any
+
 
 def ask_user() -> str:
     """Вспомогательная функция для взаимодействия с пользователем."""
@@ -12,27 +16,29 @@ def show_message(message: str) -> None:
     print(f"\nПрограмма:\n{message}")
 
 
-def api_request():
-    """ Вспомогательная функция осуществляющая запросы к API. """
+def writing_api_to_tables(country_repo: CountryRepository, flights_repo: FlightRepository) -> None:
+    """ Вспомогательная функция осуществляющая запросы к API и добавляющая данные в таблицу. """
     list_country = ["France", "Germany", "Italy", "Spain", "Sweden", "Poland", "Greece", "Portugal", "Netherlands",
                     "Austria"]
 
-    api_1 = APICoordinates()
-
-    result_country = []
-    result_airplanes = []
+    api_geo = APICoordinates()
+    api_air = APIAircraft()
 
     for country in list_country:
-        api_1.get_response_api("France",)
-        result_country.append(api_1._data_response)
+        api_geo.get_response_api(country)
+        api_geo.get_coordinates()
+        data_country = api_geo.data_response
 
-        api_1.get_coordinates()
-        api_2 = APIAircraft()
-        api_2.get_response_api(api_1.coordinates)
-        data_air = api_2.aeroplanes
+        api_air.get_response_api(api_geo.coordinates)
+        data_air = api_air.aeroplanes
 
-        time.sleep(2) # для избежания ограничения по запросам.
-    print(result_country)
+        country_repo.insert_info(data_country)
+        flights_repo.insert_info(data_air)
 
-if __name__ == '__main__':
-    api_request()
+        time.sleep(2)  # для избежания ограничения по запросам.
+
+
+def iterator(data: list[dict[str, Any]]) -> None:
+    """ Вспомогательная функция для вывода информации в консоль. """
+    for i in data:
+        print(i)
