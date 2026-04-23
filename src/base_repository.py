@@ -1,10 +1,12 @@
 from abc import ABC, abstractmethod
-from typing import Any
+from typing import Generic, TypeVar
 
 import psycopg2.extensions
 
+T = TypeVar("T")
 
-class BaseRepository(ABC):
+
+class BaseRepository(ABC, Generic[T]):
     """Базовый класс для работы с таблицами."""
 
     def __init__(self, connection: psycopg2.extensions.connection) -> None:
@@ -16,5 +18,5 @@ class BaseRepository(ABC):
         """Метод для создания таблиц."""
 
     @abstractmethod
-    def insert_info(self, data: dict[str, Any]) -> None:
+    def insert_info(self, data: T) -> None:
         """Метод добавления информации в таблицу."""

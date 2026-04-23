@@ -1,13 +1,13 @@
 from typing import Any
 
 from src.api_client import APIAircraft, APICoordinates
-from src.base_flight_repository import BaseFlightRepository
+from src.base_repository import BaseRepository
 from src.config import config
 from src.create_db import CreateDB
 from src.postgres_manager import PostgresManager
 
 
-class FlightRepository(BaseFlightRepository):
+class FlightRepository(BaseRepository):
     """Дочерний класс FlightRepository.
     Для создания таблиц о самолетах и странах, и добавление информации о самолетах."""
 
