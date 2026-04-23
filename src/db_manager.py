@@ -52,7 +52,12 @@ class DBManager:
 
             result = cur.fetchone()
 
-            return round(float(result[0] if result else 0.0), 2)
+            avg = result[0] if result else None
+
+            if avg is None:
+                return 0.0
+
+            return round(float(avg), 2)
 
     def get_max_height(self) -> list[dict[str, Any]]:
         """Метод для получения списка всех самолётов, у которых высота полёта выше средней по всем самолётам."""

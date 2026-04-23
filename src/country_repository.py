@@ -44,8 +44,8 @@ class CountryRepository(BaseRepository):
                     item.get("place_id"),
                     item.get("osm_type"),
                     item.get("osm_id"),
-                    float(item.get("lat")),
-                    float(item.get("lon")),
+                    float(item["lat"]),
+                    float(item["lon"]),
                     item.get("class"),
                     item.get("type"),
                     item.get("place_rank"),
@@ -60,23 +60,3 @@ class CountryRepository(BaseRepository):
             cur.executemany(query, values)
 
         self.conn.commit()
-
-
-if __name__ == "__main__":
-    from src.api_client import APICoordinates
-    from src.config import config
-    from src.postgres_manager import PostgresManager
-
-    api_1 = APICoordinates()
-    api_1.get_response_api("Germany")
-    data_country = api_1.data_response
-
-    params = config()
-
-    manager2 = PostgresManager("airplane", params)
-    conn2 = manager2.connect()
-
-    table = CountryRepository(conn2)
-    table.insert_info(data_country)
-
-    conn2.close()

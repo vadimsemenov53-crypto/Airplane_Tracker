@@ -1,15 +1,14 @@
-from interface.utils_app import show_message, ask_user, writing_api_to_tables, iterator
+from interface.utils_app import ask_user, iterator, show_message, writing_api_to_tables
 from src.config import config
-from src.postgres_manager import PostgresManager
-from src.create_db import CreateDB
 from src.country_repository import CountryRepository
-from src.flight_repository import FlightRepository
+from src.create_db import CreateDB
 from src.db_manager import DBManager
+from src.flight_repository import FlightRepository
+from src.postgres_manager import PostgresManager
 
 
-
-def run_app():
-    """ Основная функция для работы программы. """
+def run_app() -> None:
+    """Основная функция для работы программы."""
 
     show_message("""Запуск PostgersSQL Airplane Tracker.
     Программа создает БД для самолетов находящихся в 10 странах.
@@ -27,7 +26,7 @@ def run_app():
     db.create_db("airplane")
     conn_1.close()
 
-    manager_2 = PostgresManager('airplane', params)
+    manager_2 = PostgresManager("airplane", params)
     conn_2 = manager_2.connect()
 
     country_repo = CountryRepository(conn_2)
@@ -41,7 +40,7 @@ def run_app():
     db_manager = DBManager(conn_2)
 
     while True:
-        show_message("""Данные готовы и записаны в БД."
+        show_message("""Данные готовы и записаны в БД.
         Вам доступны следующие действия:
         1- список стран и кол-во от каждой.
         2- данные о регистрации, номерах, скорости и высоте всех самолетов.
@@ -50,35 +49,37 @@ def run_app():
         5- поиск самолетов по конкретным названиям стран (например, Iran, Russia).
         6- выход из программы.
         Передайте цифру для вывода информации.""")
-        choice = int(ask_user())
+        try:
+            choice = int(ask_user())
 
-        if choice == 1:
-            data = db_manager.get_info_countries_and_planes()
-            iterator(data)
+            if choice == 1:
+                iterator(db_manager.get_info_countries_and_planes())
 
-        elif choice == 2:
-            data = db_manager.get_all_planes()
-            iterator(data)
+            elif choice == 2:
+                iterator(db_manager.get_all_planes())
 
-        elif choice == 3:
-            data = db_manager.get_avg_height()
-            print(f'Средняя высота полета всех самолетов = {data}')
+            elif choice == 3:
+                avg = db_manager.get_avg_height()
+                print(f"Средняя высота полета всех самолетов = {avg}")
 
-        elif choice == 4:
-            data = db_manager.get_max_height()
-            iterator(data)
+            elif choice == 4:
+                iterator(db_manager.get_max_height())
 
-        elif choice == 5:
-            show_message("""Передайте через запятую и пробел названия стран для поиска (Iran, Russia)""")
-            user_input = ask_user()
-            list_country = [c.strip() for c in user_input.split(', ') if c.strip()]
+            elif choice == 5:
+                show_message("""Передайте через запятую названия стран для поиска (Iran, Russia)""")
+                user_input = ask_user()
+                list_country = [c.strip() for c in user_input.split(",") if c.strip()]
 
-            data = db_manager.get_planes_by_countries(list_country)
-            iterator(data)
+                iterator(db_manager.get_planes_by_countries(list_country))
 
-        elif choice == 6:
-            show_message("Завершение работы программы.")
-            break
+            elif choice == 6:
+                show_message("Завершение работы программы.")
+                conn_2.close()
+                break
 
-        else:
-            show_message("Передано неверное значение.")
+            else:
+                show_message("Передано неверное значение.")
+
+        except ValueError:
+            show_message("Введите число от 1 до 6")
+            continue
