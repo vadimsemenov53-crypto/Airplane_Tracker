@@ -1,6 +1,7 @@
 import os
 
 from dotenv import load_dotenv
+
 from src.db_params import DBParams
 
 
@@ -20,7 +21,7 @@ def config() -> DBParams:
 
 
 def get_env(name: str) -> str:
-    """ Вспомогательная функция для типизации config. """
+    """Вспомогательная функция для типизации config."""
     value = os.getenv(name)
     if value is None:
         raise ValueError(f"{name} не задан")

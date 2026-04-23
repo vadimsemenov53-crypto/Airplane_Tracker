@@ -2,9 +2,6 @@ from typing import Any
 
 import psycopg2.extensions
 
-from src.config import config
-from src.postgres_manager import PostgresManager
-
 
 class DBManager:
     """Базовый класс для работы с данными таблицы."""
@@ -94,19 +91,3 @@ class DBManager:
                 result_list.append({"country": country_name, "board_number": icao24, "speed": speed, "height": height})
 
         return result_list
-
-
-# if __name__ == "__main__":
-#     params = config()
-#
-#     manager = PostgresManager("airplane", params)
-#     conn = manager.connect()
-#
-#     db_manager = DBManager(conn)
-#     data = db_manager.get_planes_by_countries(["Germany", "France", "Italy"])
-#     # print(data)
-#
-#     conn.close()
-#
-#     for i in data:
-#         print(i)

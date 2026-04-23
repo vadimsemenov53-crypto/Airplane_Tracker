@@ -1,10 +1,6 @@
 from typing import Any
 
-from src.api_client import APIAircraft, APICoordinates
 from src.base_repository import BaseRepository
-from src.config import config
-from src.create_db import CreateDB
-from src.postgres_manager import PostgresManager
 
 
 class FlightRepository(BaseRepository):
@@ -78,31 +74,3 @@ class FlightRepository(BaseRepository):
             cur.executemany(query, values)
 
         self.conn.commit()
-
-
-# if __name__ == "__main__":
-#     api_1 = APICoordinates()
-#     api_1.get_response_api("Germany")
-#     api_1.get_coordinates()
-#
-#     api_2 = APIAircraft()
-#     api_2.get_response_api(api_1.coordinates)
-#     data_air = api_2.aeroplanes
-#
-#     params = config()
-#
-#     manager = PostgresManager("postgres", params)
-#     conn = manager.connect()
-#
-#     db = CreateDB(conn)
-#     db.create_db("airplane")
-#     conn.close()
-#
-#     manager2 = PostgresManager("airplane", params)
-#     conn2 = manager2.connect()
-#
-#     table = FlightRepository(conn2)
-#     table.create_table()
-#     table.insert_info(data_air)
-#
-#     conn2.close()
